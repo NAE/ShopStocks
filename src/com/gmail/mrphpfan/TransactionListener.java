@@ -15,6 +15,7 @@ public class TransactionListener implements Listener {
 	
 	public TransactionListener(ShopStocks plugin){
 		this.plugin = plugin;
+		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
