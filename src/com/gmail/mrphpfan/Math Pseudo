@@ -1,0 +1,8 @@
+Math pseudo
+
+  Do each comodity
+    Reed
+      Get quantity sold yesterday
+      Save in Reed_Quantity
+    Wood
+      Get quantity
