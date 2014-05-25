@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.bukkit.Material;
@@ -15,7 +16,7 @@ public class ShopStocks extends JavaPlugin implements Listener {
 	
 	public static final String ITEM_WEIGHTS_FILE_PATH = "plugins/ShopStocks/itemWeights.txt";
 	
-	public HashMap<String, Float> itemWeights = new HashMap<String, Float>();
+	public HashMap<Material, Float> itemWeights = new HashMap<Material, Float>();
 	
 	private TransactionListener transListener;
 	private CommandListener commandListener;
@@ -34,6 +35,8 @@ public class ShopStocks extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onDisable(){
+		//update item weights with ones we have stored in memory
+		writeItemList();
 		getLogger().info("ShopStocks Disabled.");
 	}
 	
@@ -48,7 +51,7 @@ public class ShopStocks extends JavaPlugin implements Listener {
 		}
 		
 		//create a list of items if it does not already exist
-		createItemList();
+		createDefaultItemList();
 		//read in the item list
 		readItemList();
 	}
@@ -57,7 +60,7 @@ public class ShopStocks extends JavaPlugin implements Listener {
 	 * Creates a list of all items with weights defaulting at 1.0, if this file does not already exist
 	 * Available range for weights is 0.0 -> 1.0
 	 */
-	private void createItemList(){
+	private void createDefaultItemList(){
 		
 		File itemListFile = new File(ITEM_WEIGHTS_FILE_PATH);
 		//create the file if it doesn't exist already
@@ -88,7 +91,7 @@ public class ShopStocks extends JavaPlugin implements Listener {
 	/**
 	 * Reads in item weights from file
 	 */
-	public void readItemList(){
+	private void readItemList(){
 		File itemListFile = new File(ITEM_WEIGHTS_FILE_PATH);
 		try {
 			Scanner scanner1 = new Scanner(itemListFile);
@@ -97,7 +100,9 @@ public class ShopStocks extends JavaPlugin implements Listener {
 				//get the item name and its current weight
 				int indexOfColon = itemLine.indexOf(":");
 				String itemType = itemLine.substring(0,indexOfColon);
-				Float itemWeight = Float.parseFloat(itemLine.substring(indexOfColon+1));
+				float itemWeight = Float.parseFloat(itemLine.substring(indexOfColon+1));
+				Material materialType = Material.valueOf(itemType);
+				itemWeights.put(materialType, itemWeight);
 			}
 			scanner1.close();
 		} catch (FileNotFoundException e) {
@@ -107,4 +112,26 @@ public class ShopStocks extends JavaPlugin implements Listener {
 		}
 	}
 	
+	/**
+	 * Writes new item weights back to file
+	 */
+	private void writeItemList(){
+		File itemListFile = new File(ITEM_WEIGHTS_FILE_PATH);
+		if(itemListFile.exists()){
+			//write weights to it
+			try{
+				PrintWriter out = new PrintWriter(itemListFile);
+				for(Map.Entry<Material, Float> entry : itemWeights.entrySet()){
+					Material materialType = entry.getKey();
+					float itemWeight = entry.getValue();
+					String ln = materialType.toString() + ":" + itemWeight;
+					out.println(ln);
+				}
+				out.close();
+			}catch(FileNotFoundException e) {
+				getLogger().warning("Unable to write to ShopStocks item weights file.");
+				e.printStackTrace();
+			}
+		}
+	}
 }
