@@ -1,4 +1,4 @@
 name: ShopStocks
 main: com.gmail.mrphpfan.ShopStocks
 version: 1.0
-depend: [Vault, ChestShop]
+depend: [Vault, ChestShop, Essentials]

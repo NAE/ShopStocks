@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/home/nile/Documents/bukkit_dev/ChestShop.jar"/>
 	<classpathentry kind="lib" path="/home/nile/Documents/bukkit_dev/craftbukkit-1.7.2-R0.3.jar"/>
 	<classpathentry kind="lib" path="/home/nile/Documents/bukkit_dev/Vault.jar"/>
+	<classpathentry kind="lib" path="/home/nile/other_apps/pluginTest/plugins/Essentials.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
